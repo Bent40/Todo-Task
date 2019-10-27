@@ -1,0 +1,15 @@
+.cardInfo{
+    width:50%;
+}
+.card_design{
+border:black 5px solid;
+width: 50%;
+margin: auto;
+height: 50px;
+}
+.button_box{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    height: 100%;
+}
