@@ -22,9 +22,10 @@ else{
 
 //update current database
 app.put('/:id',(req,res)=>{
+    console.log("Entered");
     const todoID = req.params.id;//gets id of requested todo
     const userInput = req.body;//gets new update
-    db.getDB().collection(collection).findOneAndUpdate({_id: db.getPrimaryKey(todoID)},{$set:{todo: userInput.todo}},{returnOriginal :false},(err,result)=>{
+    db.getDB().collection(collection).findOneAndUpdate({_id: db.getPrimaryKey(todoID)},{$set:{todo: userInput}},{returnOriginal :false},(err,result)=>{
     if(err)
     console.log(err);
     else

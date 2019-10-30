@@ -3,7 +3,6 @@ import React from "react";
 
 const Cards = (props) =>
 {
-    console.log(props.info)
     return(
         <div className="card_design">
            <span className="cardInfo">{props.info}</span>

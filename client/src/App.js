@@ -6,75 +6,76 @@ class App extends Component {
   state = {
     data: [],
     info: "",
-   }
-  
-  componentDidMount(){
+  }
+
+  componentDidMount() {
     this.getTodos();
   }
-  getTodos = () =>{
-    fetch('/getTodos',{method:"get"}).then((response)=>{
+  getTodos = () => {
+    fetch('/getTodos', { method: "get" }).then((response) => {
       return response.json();
-    }).then((data)=>{
+    }).then((data) => {
       console.log(data);
-      this.setState({data:data});
+      this.setState({ data: data });
     })
   }
-  
+
   onClickPostHandler = event => {
     event.preventDefault();
-    fetch('/',{
+    fetch('/', {
       method: 'post',
-      body:JSON.stringify({todo:this.state.info}),
-      headers:{
-        "content-Type" : "application/json; charset=utf-8"
+      body: JSON.stringify({ todo: this.state.info }),
+      headers: {
+        "content-Type": "application/json; charset=utf-8"
       }
-    }).then((response)=>{
+    }).then((response) => {
       console.log(response);
       return response.json();
-    }).then((data)=>{
-      if(data.result.ok === 1 && data.result.n === 1)
-      {
+    }).then((data) => {
+      if (data.result.ok === 1 && data.result.n === 1) {
         this.getTodos();
       }
     })
-    }
-
-  onClickRemoveHandler = (event) =>{
-    let stateCopy = {...this.state};
-    for(let key = 0; key < this.state.data.length; key++)
-    {
-      if(stateCopy.data[key].key === event.target.id)
-      {
-        stateCopy.data = stateCopy.data.filter(todo => todo.key !== event.target.id);
-        break;
-      }
-    }
-    this.setState({data:stateCopy.data});
   }
+
+  onClickRemoveHandler = (event) => {
+    fetch("/" + event.target.id, { method: "delete" }
+    )
+    this.getTodos();
+  }
+
+  onClickEditHandler = (event) => {
+    let newInfo = prompt("Enter Your Edited Todo");   
+    fetch("/"+event.target.id ,{
+      method: 'put',
+      body: newInfo
+    })
+    this.getTodos();
+  }
+
   onChangeHandler = event => {
     let infoClone = JSON.parse(JSON.stringify(this.state.info));
     infoClone = event.target.value;
-    this.setState({info:infoClone});
-    console.log(this.state.info);
+    this.setState({ info: infoClone });
   }
   render() {
     let cardArray = this.state.data.map((item, index) => {
-      console.log(item)
       return (
-        <Cards 
+        <Cards
           key={index}
+          id={item._id}
           remove={e => this.onClickRemoveHandler(e)}
-          info={item.info}></Cards>
+          edit={e => this.onClickEditHandler(e)}
+          info={item.todo}></Cards>
       );
     });
-    console.log(this.state);
     return (
-      <div className="App">
+      <div className="App" >
         <div className="wrapper">
-        <h1 className="headline">to do list</h1>
-        <input className="input" onChange={e => this.onChangeHandler(e)} value={this.state.info}/>
-        <button className="add" onClick={e => {this.onClickPostHandler(e)}}>Add</button>
-        {cardArray}
+          <h1 className="headline">to do list</h1>
+          <input className="input" onChange={e => this.onChangeHandler(e)} value={this.state.info} />
+          <button className="add" onClick={e => { this.onClickPostHandler(e) }}>Add</button>
+          {cardArray}
         </div>
       </div>
     )
